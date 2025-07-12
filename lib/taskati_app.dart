@@ -13,6 +13,9 @@ class TaskatiApp extends StatelessWidget {
       splitScreenMode: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: "NotoSerif"
+        ),
         home: SplashScreen(),
       ),
     );
