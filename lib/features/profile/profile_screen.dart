@@ -45,7 +45,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: (){
                 showModalBottomSheet(context: context, builder: (context)=>Padding(
                   padding:  EdgeInsets.symmetric(horizontal: 16.0.w,vertical: 10.h),
-
                   child: IntrinsicHeight(
                     child: Column(
                       children: [
