@@ -1,23 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:taskati/core/services/local/tasks_services.dart';
+import 'package:taskati/features/home/models/task_model.dart';
 
-import '../../../core/theme/app_colors.dart';
 
 
 
-class TasksListView extends StatelessWidget {
+
+class TasksListView extends StatefulWidget {
   const TasksListView({super.key});
 
   @override
+  State<TasksListView> createState() => _TasksListViewState();
+}
+
+class _TasksListViewState extends State<TasksListView> {
+  @override
   Widget build(BuildContext context) {
-    return  Expanded(
+    return TaskModel.tasks.isEmpty?Column(
+      children: [
+        Image.asset("assets/images/empty_tasks.png"),
+        Text("you don't have any task yet!",style: TextStyle(
+          fontSize: 18.sp,
+          color: Colors.grey
+        ),),
+      ],
+    ) : Expanded(
       child: ListView.separated(
         separatorBuilder: (context,index)=>SizedBox(height: 10.h,),
-        itemCount: 10,
+        itemCount: TaskModel.tasks.length,
         itemBuilder: (context,index){
           return Dismissible(
               key: UniqueKey(),
-              child: TaskItem());
+              confirmDismiss: (direction)async{
+                if(direction ==DismissDirection.startToEnd){
+                 setState(() {
+                   TasksServices.updateTask(TaskModel.tasks[index], index);
+                   TaskModel.tasks[index].status="Complete";
+                 });
+                }else{
+                setState(() {
+                  TaskModel.tasks.remove(TaskModel.tasks[index]);
+                  TasksServices.deleteTask(index);
+
+                });
+                }
+              },
+              background: Container(
+                alignment: Alignment.centerLeft,
+                color: Colors.green,
+                child: Text("Complete Task",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.white
+                ),
+                ),
+              ),
+              secondaryBackground: Container(
+                alignment: Alignment.centerRight,
+                color: Colors.red,
+                child: Text("Remove",style: TextStyle(
+                    fontSize: 18.sp,
+                    color: Colors.white
+                ),),
+              ),
+              child: TaskItem(
+                taskModel: TaskModel.tasks[index],
+              ));
         },
       ),
     );
@@ -26,7 +75,8 @@ class TasksListView extends StatelessWidget {
 
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+  final TaskModel taskModel;
+  const TaskItem({super.key, required this.taskModel,});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +85,7 @@ class TaskItem extends StatelessWidget {
           vertical: 15.h
       ),
       decoration: BoxDecoration(
-          color: AppColors.mainColor,
+          color: Color(taskModel.taskColor),
           borderRadius: BorderRadius.circular(12.r)
       ),
       child: IntrinsicHeight(
@@ -45,7 +95,7 @@ class TaskItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Flutter Task -",style: TextStyle(
+                  Text(taskModel.title,style: TextStyle(
                       fontSize: 22.sp,
                       color: Colors.white,
                       fontWeight: FontWeight.bold
@@ -54,7 +104,7 @@ class TaskItem extends StatelessWidget {
                   Row(children: [
                     Icon(Icons.alarm_add,color: Colors.white,),
                     SizedBox(width: 5.w,),
-                    Text("02:03 AM - 03:33 PM",
+                    Text("${taskModel.startTime}  - ${taskModel.endTime}",
                         style: TextStyle(
                           fontSize: 17.sp,
                           color: Colors.white,
@@ -63,7 +113,7 @@ class TaskItem extends StatelessWidget {
                   ],),
                   SizedBox(height: 10.h,),
 
-                  Text("i will do this task",style: TextStyle(
+                  Text(taskModel.des,style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.w600
@@ -80,7 +130,7 @@ class TaskItem extends StatelessWidget {
 
             RotatedBox(
               quarterTurns: 3,
-              child: Text("ToDo",style: TextStyle(
+              child: Text(taskModel.status,style: TextStyle(
 
                   color: Colors.white,
                   fontSize: 18.sp,

@@ -13,9 +13,10 @@ class TextFormFieldWithTitle extends StatelessWidget {
    final String hintText;
    final int maxLine;
    final Icon? suffixIcon;
+   final TextEditingController? controller;
    final String? Function(String?)? validator;
    final void Function()? onTap;
-   const TextFormFieldWithTitle({super.key, required this.title, required this.hintText,  this.maxLine=1, this.suffixIcon, this.validator, this.onTap});
+   const TextFormFieldWithTitle({super.key, required this.title, required this.hintText,  this.maxLine=1, this.suffixIcon, this.validator, this.onTap, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class TextFormFieldWithTitle extends StatelessWidget {
         ),),
         SizedBox(height: 10.h,),
         TextFormField(
+          controller: controller,
           onTap:onTap ,
           readOnly: onTap!=null,
           cursorColor: AppColors.mainColor,

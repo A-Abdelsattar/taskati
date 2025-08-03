@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taskati/features/splash/splash_screen.dart';
 
+
 class TaskatiApp extends StatelessWidget {
   const TaskatiApp({super.key});
 
@@ -14,10 +15,14 @@ class TaskatiApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: "NotoSerif"
+          brightness:Brightness.light,
+          fontFamily: "NotoSerif",
+
         ),
         home: SplashScreen(),
       ),
     );
   }
 }
+
+

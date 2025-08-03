@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectTaskColor extends StatefulWidget {
-   const SelectTaskColor({super.key});
+  final Function(Color) onChange;
+   const SelectTaskColor({super.key, required this.onChange});
 
   @override
   State<SelectTaskColor> createState() => _SelectTaskColorState();
@@ -19,7 +20,6 @@ class _SelectTaskColorState extends State<SelectTaskColor> {
     Colors.red,
     Colors.yellow,
     Colors.black54,
-
   ];
 int activeIndex=0;
   @override
@@ -42,6 +42,7 @@ int activeIndex=0;
              if(activeIndex!=index){
                setState(() {
                  activeIndex=index;
+                 widget.onChange(colors[activeIndex]);
                });
              }
             },

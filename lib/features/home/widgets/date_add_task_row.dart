@@ -6,7 +6,8 @@ import 'package:taskati/features/add_task/add_task_screen.dart';
 
 
 class DateAddTaskRow extends StatelessWidget {
-  const DateAddTaskRow({super.key});
+  final void Function()? onTap;
+  const DateAddTaskRow({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,7 @@ class DateAddTaskRow extends StatelessWidget {
           fontWeight: FontWeight.bold
         ),),
         InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>AddTaskScreen()));
-          },
+          onTap: onTap,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 15.h),
             decoration: BoxDecoration(

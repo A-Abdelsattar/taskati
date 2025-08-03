@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:taskati/core/services/local/user_services.dart';
 import 'package:taskati/core/theme/app_colors.dart';
+import 'package:taskati/features/add_task/widgets/text_form_field_with_title.dart';
+import 'package:taskati/features/profile/models/user_model.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -18,8 +21,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   selectImageFromGallery()async{
     final ImagePicker picker = ImagePicker();
-     image = await picker.pickImage(source: ImageSource.gallery);
-     setState(() {
+    image = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
 
     });
   }
@@ -32,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
      });
    }
 
+   var nameController=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,59 +47,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             InkWell(
               onTap: (){
-                showModalBottomSheet(context: context, builder: (context)=>Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 16.0.w,vertical: 10.h),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 60.h),
-                                backgroundColor: AppColors.mainColor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.r)
-                                )
-                            )
-                            ,onPressed: (){
+                showModalBottomSheet(context: context, builder: (context){
+                  return Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 8.0.h,horizontal: 8.w),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: (){
                               selectImageFromCamera();
-                        }, child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("open Camera",style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white
-                          ),),
-                        )),
-                        SizedBox(height: 10.h,),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 60.h),
-                    
-                                backgroundColor: AppColors.mainColor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.r)
-                                )
-                            )
-                            ,onPressed: (){
+                            }
+                            ,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 16.h),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: AppColors.mainColor,
+                                borderRadius: BorderRadius.circular(12.r)
+                              ),
+                              child: Text("Open Camera",style: TextStyle(
+                                fontSize: 18.sp,
+                                color: Colors.white
+                              ),),
+                            ),
+                          ),
+                          SizedBox(height: 10.h,),
+                          InkWell(
+                            onTap: (){
                               selectImageFromGallery();
-                              Navigator.pop(context);
-                        }, child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("open gallery",style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white
-                          ),),
-                        )),
-                    
-                      ],
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 16.h),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: AppColors.mainColor,
+                                borderRadius: BorderRadius.circular(12.r)
+                              ),
+                              child: Text("Open Gallery",style: TextStyle(
+                                fontSize: 18.sp,
+                                color: Colors.white
+                              ),),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ));
+                  );
+                });
               },
               child: CircleAvatar(
                 radius: 60.r,
-                backgroundImage: Image.file(File(image?.path??"")).image,
+                backgroundImage: Image.file(File(image?.path??UserServices.getUSerData().image??"")).image,
                          child: Align(
                          alignment: Alignment.bottomRight
                          ,child: Container(
@@ -115,24 +117,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             ),
             SizedBox(height: 40.h,),
-            Row(
-              children: [
-                Expanded(child: Text("data",maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 22.sp,
-                    color: AppColors.mainColor,
-                    fontWeight: FontWeight.bold
-                  ),
-                )),
-                Container(
-                    decoration: BoxDecoration(
-                      shape:BoxShape.circle,
-                      border: Border.all(color: AppColors.mainColor,width: 2)
+            InkWell(
+              onTap: (){
+                showModalBottomSheet(context: context, builder: (context){
+                  return IntrinsicHeight(
+                    child: Padding(
+                      padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom,
+                      top: 10.h,left: 10.w,right: 10.w
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            TextFormFieldWithTitle(
+                            controller: nameController
+                            ,title: "Name", hintText: "Enter your name"),
+                            SizedBox(height: 10.h,),
+                            InkWell(
+                              onTap: (){
+                                setState(() {
+
+                                });
+                                Navigator.pop(context);
+                              }
+                              ,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 16.h),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: AppColors.mainColor,
+                                    borderRadius: BorderRadius.circular(12.r)
+                                ),
+                                child: Text("Change name",style: TextStyle(
+                                    fontSize: 18.sp,
+                                    color: Colors.white
+                                ),),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: Icon(Icons.mode_edit_outline_outlined,color: AppColors.mainColor,size: 35.r,))
-              ],
-            )
+                  );
+                });
+              },
+              child: Row(
+                children: [
+                  Expanded(child: Text(
+                    nameController.text.isEmpty?UserServices.getUSerData().name:
+                    nameController.text
+
+                    ,maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 22.sp,
+                      color: AppColors.mainColor,
+                      fontWeight: FontWeight.bold
+                    ),
+                  )),
+                  Container(
+                      decoration: BoxDecoration(
+                        shape:BoxShape.circle,
+                        border: Border.all(color: AppColors.mainColor,width: 2)
+                      ),
+                      child: Icon(Icons.mode_edit_outline_outlined,color: AppColors.mainColor,size: 35.r,))
+                ],
+              ),
+            ),
+            SizedBox(height: 20,),
+            InkWell(
+              onTap: (){
+                UserServices.saveUser(UserModel(nameController.text, image?.path??UserServices.getUSerData().image));
+              Navigator.pop(context);
+                }
+              ,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(12.r)
+                ),
+                child: Text("Create user",style: TextStyle(
+                    fontSize: 18.sp,
+                    color: Colors.white
+                ),),
+              ),
+            ),
+
           ],
         ),
       ),
